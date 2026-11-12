@@ -1,1 +1,0 @@
-Auto save probe - this file is created only to verify scheduled auto-save, and will be removed after the test.
