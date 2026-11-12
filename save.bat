@@ -1,6 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 set GIT_TERMINAL_PROMPT=0
+set "RC=0"
 cd /d "%~dp0"
 if errorlevel 1 goto :fail
 
@@ -32,18 +33,25 @@ if errorlevel 1 (
 
 echo [4/4] Pushing to GitHub...
 git push origin main
+if not errorlevel 1 goto :success
+echo     Network glitch, retry in 3 seconds...
+ping -n 4 127.0.0.1 >nul 2>&1
+git push origin main
 if errorlevel 1 goto :fail
 
+:success
 echo.
 echo SUCCESS - files are now on GitHub.
 echo https://github.com/sbetzybweng/hello-github
 goto :end
 
 :nogit
+set "RC=1"
 echo ERROR - this folder is not a git repository.
 goto :end
 
 :fail
+set "RC=1"
 echo.
 echo FAILED - see messages above. Check network, then try again.
 goto :end
@@ -51,3 +59,4 @@ goto :end
 :end
 echo.
 pause
+exit /b %RC%
